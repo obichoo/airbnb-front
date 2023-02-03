@@ -18,8 +18,8 @@ export default {
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
-    '@/assets/css/main.css',
-    '@/assets/css/fonts.css',
+    '@/static/assets/css/main.css',
+    '@/static/assets/css/fonts.css',
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins

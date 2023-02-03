@@ -1,9 +1,9 @@
 <template>
   <div class="custom-shadow border px-2 flex items-center border-gray-100 h-12 rounded-full">
-    <button class="text-sm px-4 border-r border-gray-100 h-5">
+    <button class="text-sm px-4 border-r border-gray-300 h-5">
       <div>N'importe où</div>
     </button>
-    <button class="text-sm px-4 border-r border-gray-100 h-5">
+    <button class="text-sm px-4 border-r border-gray-300 h-5">
       <div>Une semaine</div>
     </button>
     <button class="text-sm flex items-center pl-4 h-5">

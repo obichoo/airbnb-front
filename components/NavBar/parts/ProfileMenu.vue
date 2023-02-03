@@ -1,7 +1,7 @@
 <template>
   <div>
     <button class="border border-gray-200 p-1 rounded-full flex items-center" type="button">
-      <div class="mx-2">
+      <div class="ml-2 mr-3">
         <svg viewBox="0 0 32 32" class="block fill-none h-4 w-4 stroke-current overflow-visible" style="stroke-width: 3">
           <g fill="none" fill-rule="nonzero">
             <path d="m2 16h28"></path>
