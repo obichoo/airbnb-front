@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed border-t text-sm border-gray-300 px-20 pt-4 pb-3 bottom-0 w-screen flex z-40">
+  <div class="fixed border-t text-sm bg-white border-gray-300 px-20 pt-4 pb-3 bottom-0 w-screen flex z-[10000]">
     <div class="flex gap-x-2 flex-wrap">
       <span>© 2023 Airbnb, Inc.</span>
       <span>·</span>
@@ -69,7 +69,7 @@
           </svg>
         </button>
 
-        <div class="pt-12 pb-10 px-20 flex font-light">
+        <div class="pt-12 pb-10 px-20 flex">
           <ul class="w-80 px-2">
             <li class="pb-4"><strong>Assistance</strong></li>
             <li class="pb-4">Centre d'aide</li>
@@ -114,7 +114,7 @@
 export default {
   data() {
     return {
-      isCollapsed: false
+      isCollapsed: true
     }
   },
   methods: {

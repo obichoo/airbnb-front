@@ -1,6 +1,6 @@
 <template>
-  <div :class="isAtTop ? 'pt-5' :''">
-    <div v-if="!isAtLimitLeft" class="fixed flex items-center justify-center bg-gradient-to-r from-white h-20 w-20 left-0 z-10">
+  <div :class="'transition-all duration-200 overflow-hidden ' + topClasses">
+    <div v-if="!isAtLimitLeft" class="fixed flex items-center justify-center bg-gradient-to-r from-white h-20 w-20 left-20 z-[9999]">
       <button
         class="bg-white border-gray-300 border-2 rounded-full p-2 transition-all duration-300 shadow-none shadow-black hover:shadow-md"
         v-on:click="slideTo('left')"
@@ -10,17 +10,19 @@
         </svg>
       </button>
     </div>
-    <div ref="slider" class="transition-all duration-500 fixed flex gap-8 pt-4 px-20">
-      <Icon
-        :class="`min-w-[50px] pb-3 ${selected == icon.fileName ? 'opacity-100 border-b-2 border-black' : 'opacity-60'}`"
-        v-on:click.native="setSelectedIcon(icon.fileName)"
-        :key="icon.fileName"
-        v-for="icon in icons"
-        :url="`/assets/img/homepage-icons/${icon.fileName}`"
-        :label="icon.name"
-      />
+    <div class="fixed z-[9998] overflow-hidden w-[calc(100%-160px)] mx-20">
+      <div ref="slider" :class="'transition-all w-max duration-500 flex gap-8 pt-4 pr-52 bg-white ' + sliderTopBorderClasses">
+        <Icon
+          :class="`min-w-[50px] pb-3 ${selected == icon.fileName ? 'opacity-100 border-b-2 border-black' : 'opacity-60'}`"
+          v-on:click.native="setSelectedIcon(icon.fileName)"
+          :key="icon.fileName"
+          v-for="icon in icons"
+          :url="`/assets/img/homepage-icons/${icon.fileName}`"
+          :label="icon.name"
+        />
+      </div>
     </div>
-    <div v-if="!isAtLimitRight" class="fixed flex items-center justify-center bg-gradient-to-l from-white h-20 w-20 right-0 z-10">
+    <div v-if="!isAtLimitRight" class="fixed flex items-center justify-center bg-gradient-to-l from-white h-20 w-20 right-20 z-[9999]">
       <button
         class="bg-white border-gray-300 border-2 rounded-full p-2 transition-all duration-300 shadow-none shadow-black hover:shadow-md"
         v-on:click="slideTo('right')"
@@ -30,10 +32,12 @@
         </svg>
       </button>
     </div>
+
+    <div class="h-20 w-full"></div>
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from 'vue'
 import icons from '@/static/assets/data/icons.json'
 
@@ -50,12 +54,19 @@ export default Vue.extend({
       isAtTop: true
     }
   },
-  methods: {
-    setSelectedIcon(iconName: string) {
-      this.selected = iconName
-      console.log(this.selected, iconName)
+  computed: {
+    topClasses() {
+      return this.isAtTop ? 'pt-5' : 'pt-0'
     },
-    slideTo(direction: 'left' | 'right') {
+    sliderTopBorderClasses() {
+      return this.isAtTop ? '' : 'border-b border-gray-300'
+    }
+  },
+  methods: {
+    setSelectedIcon(iconName) {
+      this.selected = iconName
+    },
+    slideTo(direction) {
       this.isAtLimitLeft = false
       this.isAtLimitRight = false
       if (direction === 'left') {
@@ -67,18 +78,19 @@ export default Vue.extend({
         this.translateValue = 0
         this.isAtLimitLeft = true
       }
-      if (this.translateValue <= -(this.$refs.slider as HTMLElement).offsetWidth + window.innerWidth) {
-        this.translateValue = -(this.$refs.slider as HTMLElement).offsetWidth + window.innerWidth
+      if (this.translateValue <= -this.$refs.slider.offsetWidth + window.innerWidth) {
+        this.translateValue = -this.$refs.slider.offsetWidth + window.innerWidth
         this.isAtLimitRight = true
       }
-      ;(this.$refs.slider as HTMLElement).style.transform = `translateX(${this.translateValue}px)`
+      this.$refs.slider.style.transform = `translateX(${this.translateValue}px)`
     }
   },
   mounted() {
     this.slideUnit = window.innerWidth / 2
 
-    window.addEventListener('scroll', (e: any) => {
-      console.log(e)
+    window.addEventListener('scroll', (e) => {
+      if (window.scrollY < 1) this.isAtTop = true
+      else this.isAtTop = false
     })
   }
 })

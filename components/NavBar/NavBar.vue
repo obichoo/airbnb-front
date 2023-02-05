@@ -1,10 +1,10 @@
 <template>
   <div>
     <div class="mt-20"></div>
-    <div class="top-0 fixed w-screen bg-white h-20 flex px-20 items-center border-b border-gray-200">
+    <div class="z-[9999] top-0 fixed w-screen bg-white h-20 flex px-20 items-center border-b border-gray-200">
       <Logo class="mr-auto" />
       <SearchBar class="mx-6" />
-      <a class="px-5 h-4" href="#">Mettre mon logement sur Airbnb</a>
+      <a class="px-5 h-4 font-semibold" href="#">Mettre mon logement sur Airbnb</a>
       <LanguageSelector />
       <ProfileMenu class="ml-3" />
     </div>
