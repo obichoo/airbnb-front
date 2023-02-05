@@ -1,5 +1,5 @@
 <template>
-  <div class="w-max">
+  <div class="w-max cursor-pointer">
     <img class="block mx-auto w-6 mb-2" :src="url" :alt="label" />
     <p class="text-xs text-center">{{ label }}</p>
   </div>

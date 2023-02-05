@@ -1,6 +1,6 @@
 <template>
   <div>
-    <HomePageFilters />
+    <Filters />
   </div>
 </template>
 
