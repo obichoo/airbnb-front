@@ -16,9 +16,13 @@
   font-weight: 600;
 }
 
-
 @font-face {
   font-family: 'Circular';
   src: url('../fonts/Airbnb_Cereal-Light.woff2');
   font-weight: 300;
+}
+
+@font-face {
+  font-family: "Airmojix";
+  src: url('../fonts/Airmojix.woff2');
 }

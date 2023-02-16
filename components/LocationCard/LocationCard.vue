@@ -62,7 +62,7 @@
     <div class="mt-2 text-[15px]">
       <div class="flex justify-between">
         <p class="font-bold">
-          {{ location.place }}
+          {{location.location }}
         </p>
         <p class="flex items-center gap-1">
           <svg viewBox="0 0 32 32" style="display: block; height: 12px; width: 12px; fill: currentcolor">
@@ -71,18 +71,18 @@
               fill-rule="evenodd"
             ></path>
           </svg>
-          {{ location.rate }}
+          {{location.rate }}
         </p>
       </div>
       <div>
-        <p class="text-gray-500">{{ location.target }}</p>
+        <p class="text-gray-500">{{location.target }}</p>
       </div>
       <div>
-        <p class="text-gray-500">{{ location.dates }}</p>
+        <p class="text-gray-500">{{location.dates }}</p>
       </div>
       <div class="mt-[6px]">
         <p>
-          <span class="font-bold">{{ location.price }} €</span>
+          <span class="font-bold">{{location.price }} €</span>
           <span>par nuit</span>
         </p>
       </div>
@@ -94,10 +94,10 @@
 export default {
   name: 'LocationCard',
   props: {
-    location: {
+   location: {
       isFavourite: Boolean,
       imgs: Array,
-      place: String,
+      location: String,
       rate: Number,
       target: String,
       dates: String,
