@@ -3,8 +3,8 @@
     <Filters />
 
     <div class="px-20 mt-6 mb-10">
-      <LocationCard v-for="location in locations" @click.native="goToLocation(location.id)" :key="location.id" :location="location" />
-      <div></div>
+      <LocationCard v-for="location in locations" @click.native="goToLocation(location.id)" :key="location.id"
+        :location="location" />
     </div>
   </div>
 </template>
@@ -14,8 +14,10 @@ import Vue from 'vue'
 
 export default Vue.extend({
   name: 'IndexPage',
-  ['head' as any]: {
-    title: 'Locations saisonnières et locations en résidence - Airbnb'
+  head() {
+    return {
+      title: 'Locations saisonnières et locations en résidence - Airbnb'
+    }
   },
   data() {
     return {
