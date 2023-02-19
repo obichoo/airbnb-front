@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <button class="border border-gray-200 p-1 rounded-full flex items-center" type="button">
+  <div class="relative">
+    <button @click="toggleMenu()" class="border border-gray-200 p-1 rounded-full flex items-center custom-shadow" type="button">
       <div class="ml-2 mr-3">
         <svg viewBox="0 0 32 32" class="block fill-none h-4 w-4 stroke-current overflow-visible" style="stroke-width: 3">
           <g fill="none" fill-rule="nonzero">
@@ -18,11 +18,38 @@
         </svg>
       </div>
     </button>
+
+    <div v-if="isMenuDisplayed" class="text-sm w-[242px] absolute bg-white custom-shadow-2 rounded-xl py-3 right-0 mt-3 flex flex-col items-start gap-[21px]">
+      <button @click="toggleConnectionModal()" class="pl-4 font-semibold mt-1">Connexion</button>
+      <button @click="toggleConnectionModal()" class="pl-4">Inscription</button>
+
+      <div class="bg-[#DDDDDD] h-[1.5px] w-full"></div>
+
+      <a class="pl-4" href="#">Mettre mon logement sur Airbnb</a>
+      <a class="pl-4" href="#">Créer une expérience</a>
+      <a class="pl-4" href="#">Aide</a>
+    </div>
   </div>
 </template>
 
 <script>
-export default {}
+export default {
+  data() {
+    return {
+      isMenuDisplayed: false
+    }
+  },
+  methods: {
+    toggleMenu() {
+      this.isMenuDisplayed = !this.isMenuDisplayed
+    },
+    toggleConnectionModal() {
+      this.toggleMenu()
+
+      this.$emit('toggleModal')
+    }
+  }
+}
 </script>
 
 <style></style>
