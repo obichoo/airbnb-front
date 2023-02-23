@@ -49,5 +49,12 @@ export const state = () => ({
       beds: 3,
       bathrooms: 1
     }
-  }
+  },
+  checkedPopups: []
 })
+
+export const mutations = {
+  checkPopup(state, payload) {
+    state.checkedPopups.push(payload)
+  }
+}

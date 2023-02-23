@@ -1,6 +1,12 @@
 <template>
-  <div :class="'transition-all duration-200 overflow-hidden ' + topClasses">
-    <div v-if="!isAtLimitLeft" class="fixed flex items-center justify-center bg-gradient-to-r from-white h-20 w-20 left-20 z-[9999]">
+  <div
+    :class="{
+      ['fixed z-[9000] flex transition-all duration-200 overflow-hidden bg-white ' + topClasses]: true,
+      'w-screen': !$store.state.checkedPopups.includes('warnForBreakpoint'),
+      'w-[1440px]': $store.state.checkedPopups.includes('warnForBreakpoint')
+    }"
+  >
+    <div v-if="!isAtLimitLeft" class="absolute flex items-center justify-center bg-gradient-to-r from-white left-20 z-[9100] h-20 w-20">
       <button
         class="bg-white border-gray-300 border-2 rounded-full p-2 transition-all duration-300 shadow-none shadow-black hover:shadow-md"
         v-on:click="slideTo('left')"
@@ -10,8 +16,15 @@
         </svg>
       </button>
     </div>
-    <div class="fixed z-[9998] overflow-hidden w-[calc(100%-160px)] mx-20">
-      <div ref="slider" :class="'transition-all w-max duration-500 flex gap-8 pt-4 pr-52 bg-white ' + sliderTopBorderClasses">
+
+    <div
+      :class="{
+        'fixed overflow-hidden mx-20': true,
+        'w-[calc(100%-160px)]': !$store.state.checkedPopups.includes('warnForBreakpoint'),
+        'w-[calc(1440px-160px)]': $store.state.checkedPopups.includes('warnForBreakpoint')
+      }"
+    >
+      <div ref="slider" :class="'transition-all w-max duration-500 flex gap-8 pt-4 pr-52' + sliderTopBorderClasses">
         <Icon
           :class="`min-w-[50px] pb-3 ${selected == icon.fileName ? 'opacity-100 border-b-2 border-black' : 'opacity-60'}`"
           v-on:click.native="setSelectedIcon(icon.fileName)"
@@ -22,7 +35,8 @@
         />
       </div>
     </div>
-    <div v-if="!isAtLimitRight" class="fixed flex items-center justify-center bg-gradient-to-l from-white h-20 w-20 right-20 z-[9999]">
+
+    <div v-if="!isAtLimitRight" class="absolute flex items-center justify-center bg-gradient-to-l from-white right-20 z-[9100] h-20 w-20">
       <button
         class="bg-white border-gray-300 border-2 rounded-full p-2 transition-all duration-300 shadow-none shadow-black hover:shadow-md"
         v-on:click="slideTo('right')"

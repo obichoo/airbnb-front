@@ -3,9 +3,11 @@
     <div class="mt-20"></div>
     <div
       :class="{
-        'z-[10001] top-0 fixed w-screen bg-white h-20 flex items-center border-b border-gray-200': true,
+        'z-[10001] top-0 fixed bg-white h-20 flex items-center border-b border-gray-200': true,
         'px-20': !sidesClass,
-        [sidesClass]: !!sidesClass
+        [sidesClass]: !!sidesClass,
+        'w-screen': !$store.state.checkedPopups.includes('warnForBreakpoint'),
+        'w-[1440px]': $store.state.checkedPopups.includes('warnForBreakpoint')
       }"
     >
       <Logo class="mr-auto" />
@@ -96,6 +98,13 @@
 
           <div class="p-6">
             <p class="text-[22px] font-semibold">Bienvenue sur Airbnb</p>
+
+            <InputGroup class="mt-4">
+              <Input label="Email" type="email" class="" />
+              <Input label="Mot de passe" type="password" />
+            </InputGroup>
+
+            <Button class="mt-6" :fullWidth="true">Continuer</Button>
           </div>
         </div>
       </Modal>
@@ -127,9 +136,6 @@ export default {
     toggleModal() {
       this.isDisplayedModal = !this.isDisplayedModal
     }
-  },
-  mounted() {
-    this.toggleModal()
   }
 }
 </script>
