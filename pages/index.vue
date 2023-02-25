@@ -3,8 +3,7 @@
     <Filters />
 
     <div class="px-20 pt-32 mb-10">
-      <LocationCard v-for="location in locations" @click.native="goToLocation(location.id)" :key="location.id"
-        :location="location" />
+      <LocationsGrid :locations="locations" />
     </div>
   </div>
 </template>
@@ -28,9 +27,6 @@ export default Vue.extend({
     getAirBnbLocations() {
       const location = this.$store.state.fakeLocation
       this.locations.push(location)
-    },
-    goToLocation(locationId: number) {
-      this.$router.push(`/location/${locationId}`)
     }
   },
   mounted() {
