@@ -4,7 +4,7 @@
       <span :class="{ 'absolute transition translate-y-0 text-gray-500': true, 'top-1/2 -translate-y-1/2 mt-[5px] text-lg': !inputValue, 'top-1 -translate-y-0 text-sm': inputValue }">
         {{ label }}
       </span>
-      <input class="outline-none" v-model="inputValue" :type="type" :name="inputName" />
+      <input class="outline-none" v-model="inputValue" :value="inputValue" @input="$emit('input', $event.target.value)" :type="type" :name="inputName" />
     </label>
   </div>
 </template>

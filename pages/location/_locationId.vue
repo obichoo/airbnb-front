@@ -1,6 +1,6 @@
 <template>
   <div class="pt-[19px] mb-20" v-if="location" :id="`location-${locationId}`">
-    <h1 class="text-[26px] font-semibold">{{ location.title }}</h1>
+    <PageTitle>{{ location.title }}</PageTitle>
 
     <div class="flex justify-between mt-[3px] mb-6">
       <div class="flex text-sm font-semibold">
@@ -21,11 +21,11 @@
           {{ location.rate }}
         </p>
         <div class="mx-1 pt-[2px]">·</div>
-        <p class="font-normal items-center leading-none flex" v-if="location.hasSuperhote">
+        <p class="font-normal items-center leading-none flex" v-if="author?.isSuperHote">
           <span class="text-base mr-2 mb-[2px]" style="font-family: Airmojix">󰀃</span>
           <span class="block">Superhôte</span>
         </p>
-        <div class="mx-2 pt-[2px]" v-if="location.hasSuperhote">·</div>
+        <div class="mx-2 pt-[2px]" v-if="author?.isSuperHote">·</div>
         <p class="underline leading-[1.7rem]">{{ location.location }}</p>
       </div>
 
@@ -49,14 +49,15 @@
           Partager
         </p>
 
-        <p class="flex items-center gap-2">
+        <p @click="toggleFavourite()" class="flex items-center gap-2">
           <svg
             viewBox="0 0 32 32"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true"
-            role="presentation"
-            focusable="false"
-            style="fill: none; height: 16px; width: 16px; stroke: currentcolor; stroke-width: 2; overflow: visible"
+            class="pointer-events-none"
+            :style="
+              'display: block; fill: ' +
+              (isFavourite ? 'rgba(255, 0, 0, 0.5)' : 'rgba(0, 0, 0, 0)') +
+              '; height: 20px; width: 20px; stroke: rgba(0, 0, 0, 0.5); stroke-width: 3; overflow: visible'
+            "
           >
             <path
               d="m16 28c7-4.733 14-10 14-17 0-1.792-.683-3.583-2.05-4.95-1.367-1.366-3.158-2.05-4.95-2.05-1.791 0-3.583.684-4.949 2.05l-2.051 2.051-2.05-2.051c-1.367-1.366-3.158-2.05-4.95-2.05-1.791 0-3.583.684-4.949 2.05-1.367 1.367-2.051 3.158-2.051 4.95 0 7 7 12.267 14 17z"
@@ -95,9 +96,10 @@
         <div class="flex justify-between">
           <div>
             <h2 class="font-semibold text-[22px] flex">
-              {{ location.category }}
+              {{ getCategoryName(location.category) }}
               <div class="pt-[2px] -mt-1 mx-2">·</div>
-              Chez {{ location.author }}
+              Chez
+              <span class="capitalize ml-[6px]">{{ author?.firstName }}</span>
             </h2>
 
             <div class="flex mt-1">
@@ -122,7 +124,7 @@
 
         <div class="border-t border-[#DDDDDD] mt-6"></div>
 
-        <div class="py-7">
+        <div class="pt-7">
           <div class="flex gap-4 mb-5">
             <div>
               <svg
@@ -189,6 +191,14 @@
             </div>
           </div>
         </div>
+
+        <div class="border-t border-[#DDDDDD] mt-6"></div>
+
+        <div class="pt-7">
+          <p>
+            {{ location.description }}
+          </p>
+        </div>
       </div>
 
       <div class="ml-auto mt-11 w-[372px] custom-shadow-2 border border-[#DDDDDD] p-6 rounded-xl">
@@ -220,17 +230,17 @@
           <div class="text-sm flex">
             <div class="py-[10px] px-3 rounded-tl-lg border-[#B0B0B0] border-t border-l w-1/2">
               <label class="uppercase text-[10px] font-extrabold block" for="arrivee">Arrivée</label>
-              <input @change="getJourneyPrice('date_arrivee')" class="-mt-[1px]" ref="date_arrivee" type="date" name="arrivee" value="2023-03-09" />
+              <input @change="getJourneyPrice()" class="-mt-[1px] outline-none" ref="date_arrivee" type="date" name="arrivee" v-model="dateArrivee" />
             </div>
             <div class="py-[10px] px-3 rounded-tr-lg border-[#B0B0B0] border-t border-x w-1/2">
               <label class="uppercase text-[10px] font-extrabold block" for="depart">Départ</label>
-              <input @change="getJourneyPrice('date_depart')" class="-mt-[1px]" ref="date_depart" type="date" name="depart" value="2023-03-14" />
+              <input @change="getJourneyPrice()" class="-mt-[1px] outline-none" ref="date_depart" type="date" name="depart" v-model="dateDepart" />
             </div>
           </div>
           <div class="border border-[#B0B0B0] py-[10px] px-3 rounded-b-lg">
             <label class="uppercase text-[10px] font-extrabold block" for="voyageurs">Voyageurs</label>
             <p>
-              <input class="w-5" type="number" value="2" name="voyageurs" />
+              <input @change="getJourneyPrice()" class="w-8 outline-none" type="number" value="2" name="voyageurs" />
               voyageurs
             </p>
           </div>
@@ -262,13 +272,18 @@
 </template>
 
 <script>
+import icons from '@/static/assets/data/icons.json'
 export default {
+  layout: 'location',
   data() {
     return {
-      locationId: this.$route.params.locationId,
+      locationId: null,
       location: null,
+      author: null,
       totalPrice: null,
-      nbNights: null
+      nbNights: null,
+      dateArrivee: new Date(new Date().setDate(new Date().getDate() + 5)).toISOString().split('T')[0],
+      dateDepart: new Date(new Date().setDate(new Date().getDate() + 10)).toISOString().split('T')[0]
     }
   },
   head() {
@@ -276,40 +291,62 @@ export default {
       title: this.location ? this.location.title : null
     }
   },
-  methods: {
-    getLocationData() {
-      const locationData = this.$store.state.fakeLocation
-
-      this.location = locationData
+  computed: {
+    user() {
+      return this.$store.state.user || {}
     },
-    getJourneyPrice(e) {
-      console.log(e);
-      const dateArrivee = this.$refs.date_arrivee.value
-      const dateDepart = this.$refs.date_depart.value
-      if (e == "date_arrivee" && dateArrivee >= dateDepart) {
-        const newDate = new Date(dateDepart).setDate(new Date(dateDepart).getDate() - 1)
-        this.$refs.date_arrivee.value = new Date(newDate).toISOString().split('T')[0]
+    isFavourite() {
+      return this.user?.favouriteLocations?.includes(this.location._id) || false
+    }
+  },
+  methods: {
+    getCategoryName(id) {
+      const category = icons.find((category) => category.id == id)
+      return category.name
+    },
+    getLocation() {
+      this.locationId = this.$route.params.locationId
+      this.$axios.get('locations/' + this.locationId).then((res) => {
+        this.location = res.data
+
+        this.getAuthor()
+      })
+    },
+    getAuthor() {
+      this.$axios.get('users/' + this.location.authorId).then((res) => {
+        this.author = res.data
+      })
+    },
+    getJourneyPrice() {
+      if (this.dateArrivee >= this.dateDepart) {
+        const newDate = new Date(this.dateDepart).setDate(new Date(this.dateDepart).getDate() - 1)
+        this.dateArrivee = new Date(newDate).toISOString().split('T')[0]
       }
-      if (e == "date_depart" && dateDepart <= dateArrivee) {
-        const newDate = new Date(dateArrivee).setDate(new Date(dateArrivee).getDate() + 1)
-        this.$refs.date_depart.value = new Date(newDate).toISOString().split('T')[0]
+      if (this.dateDepart <= this.dateArrivee) {
+        const newDate = new Date(this.dateArrivee).setDate(new Date(this.dateArrivee).getDate() + 1)
+        this.dateDepart = new Date(newDate).toISOString().split('T')[0]
       }
 
-      const daysDiff = new Date(dateDepart).getTime() - new Date(dateArrivee).getTime()
+      const daysDiff = new Date(this.dateDepart).getTime() - new Date(this.dateArrivee).getTime()
       this.nbNights = daysDiff / 1000 / 60 / 60 / 24
 
       this.totalPrice = this.nbNights * this.location.price
-
-      this.$refs.date_arrivee.max = this.$refs.date_depart.value
-      this.$refs.date_depart.min = this.$refs.date_arrivee.value
+    },
+    toggleFavourite() {
+      if (this.$forceConnected()) {
+        if (this.isFavourite) {
+          this.$airbnbApi.deleteFavourite(this.location._id)
+        } else {
+          this.$airbnbApi.addFavourite(this.location._id)
+        }
+      }
     }
   },
   mounted() {
-    this.getLocationData()
+    this.getLocation()
 
     window.addEventListener('load', () => this.getJourneyPrice())
-  },
-  layout: 'location'
+  }
 }
 </script>
 

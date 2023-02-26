@@ -1,3 +1,5 @@
+const Cookies = require('js-cookie')
+
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -11,20 +13,16 @@ export default {
       { hid: 'description', name: 'description', content: '' },
       { name: 'format-detection', content: 'telephone=no' }
     ],
-    link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-    ]
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [
-    '@/static/assets/css/main.css',
-    '@/static/assets/css/fonts.css',
-  ],
+  css: ['@/static/assets/css/main.css', '@/static/assets/css/fonts.css'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [
-  ],
+  plugins: ['~/plugins/eventBus', '~/plugins/isConnectedUtils', '~/plugins/airbnbApi'],
+
+  router: { middleware: 'logged' },
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -37,16 +35,17 @@ export default {
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: [
-  ],
+  modules: ['@nuxtjs/axios'],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
     postcss: {
       plugins: {
         tailwindcss: {},
-        autoprefixer: {},
-      },
-    },
-  }
+        autoprefixer: {}
+      }
+    }
+  },
+
+  Cookies
 }

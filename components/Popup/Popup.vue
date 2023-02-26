@@ -12,6 +12,7 @@ export default {
   data() {
     return {
       hasChecked: this.$store.state.checkedPopups.includes(this.popupName)
+      // hasChecked: true
     }
   },
   methods: {

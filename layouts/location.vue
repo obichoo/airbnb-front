@@ -6,7 +6,18 @@
 </template>
 
 <script>
+import Cookies from 'js-cookie'
+
 export default {
+  mounted() {
+    const token = Cookies.get('airbnb_token')
+    const user = Cookies.get('airbnb_user')
+
+    if (token && user) {
+      this.$store.commit('setToken', token)
+      this.$store.commit('setUser', JSON.parse(user))
+    }
+  },
   computed: {
     forceViewportTo1440px() {
       if (this.$store.state.checkedPopups.includes('warnForBreakpoint')) return 'width: 1440px; max-width: 1440px; margin-left: auto; margin-right: auto;'

@@ -2,7 +2,7 @@
   <div
     :class="{
       'fixed border-t text-sm bg-white border-gray-300 px-20 pt-4 pb-3 bottom-0 flex z-[10000] justify-between': true,
-      'w-screen': !$store.state.checkedPopups.includes('warnForBreakpoint'),
+      'w-full': !$store.state.checkedPopups.includes('warnForBreakpoint'),
       'w-[1440px]': $store.state.checkedPopups.includes('warnForBreakpoint')
     }"
   >
