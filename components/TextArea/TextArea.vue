@@ -12,14 +12,20 @@
       >
         {{ label }}
       </span>
-      <input class="outline-none" v-model="inputValue" @input="$emit('input', $event.target.value)" :type="type" :name="inputName" />
+      <textarea class="outline-none w-full" v-model="inputValue" @input="$emit('input', $event.target.value)" :type="type" :name="inputName"></textarea>
     </label>
   </div>
 </template>
 
 <script>
 export default {
-  props: { label: { required: false }, value: { required: false }, type: { default: 'text', required: false }, placeholder: { required: false }, inputName: { required: false } },
+  props: {
+    label: { required: false },
+    value: { required: false },
+    type: { default: 'text', required: false },
+    placeholder: { required: false },
+    inputName: { required: false }
+  },
   data() {
     return {
       isPartOfGroup: null,

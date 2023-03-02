@@ -3,8 +3,8 @@
     <div
       :class="{
         ['fixed z-[9000] flex transition-all duration-200 overflow-hidden bg-white ' + topClasses]: true,
-        'w-[calc(100%-120px)]': !$store.state.checkedPopups.includes('warnForBreakpoint'),
-        'w-[calc(1440px-120px)]': $store.state.checkedPopups.includes('warnForBreakpoint')
+        'w-[calc(100%-120px)]': !isForcedViewportWidth,
+        'w-[calc(1440px-120px)]': isForcedViewportWidth
       }"
     >
       <div v-if="!isAtLimitLeft" class="absolute flex items-center justify-center bg-gradient-to-r from-white left-20 z-[9100] h-20 w-20">
@@ -20,9 +20,9 @@
 
       <div
         :class="{
-          'fixed overflow-hidden mx-20': true,
-          'w-[calc(100%-160px-120px)]': !$store.state.checkedPopups.includes('warnForBreakpoint'),
-          'w-[calc(1440px-160px-120px)]': $store.state.checkedPopups.includes('warnForBreakpoint')
+          'absolute overflow-hidden mx-20': true,
+          'w-[calc(100%-160px-120px)]': !isForcedViewportWidth,
+          'w-[calc(1440px-160px-120px)]': isForcedViewportWidth
         }"
       >
         <div ref="slider" :class="'transition-all w-max duration-500 flex gap-8 pt-4 pr-52' + sliderTopBorderClasses">
@@ -51,7 +51,13 @@
       <div class="h-20 w-full bg-white"></div>
     </div>
 
-    <div :class="'fixed z-[9000] right-20 mt-4 transition-all duration-200 ' + topClasses">
+    <div
+      :class="{
+        ['fixed z-[9000] mt-4 transition-all duration-200 ' + topClasses]: true,
+        'ml-[100%] -translate-x-[calc(100%+45px)]': !isForcedViewportWidth,
+        'ml-[calc(1440px-150px)]': isForcedViewportWidth
+      }"
+    >
       <button @click="toggleModal()" class="h-12 w-[90px] border-[#DDDDDD] border rounded-xl bg-white flex justify-between items-center text-xs px-4">
         <svg
           viewBox="0 0 16 16"
@@ -70,7 +76,13 @@
       </button>
     </div>
 
-    <div :class="'h-20 w-full bg-white fixed z-[8900] transition-all duration-200 ' + topClasses"></div>
+    <div
+      :class="{
+        ['h-20 bg-white fixed z-[8900] transition-all duration-200 ' + topClasses]: true,
+        'w-full': !isForcedViewportWidth,
+        'w-[1440px]': isForcedViewportWidth
+      }"
+    ></div>
 
     <Modal @toggleModal="toggleModal()" :isDisplayedModal="isDisplayedModal">
       <div class="w-[567px]">
@@ -100,21 +112,32 @@
 
             <div class="relative mt-2">
               <div class="range-container">
-                <RangeSlider v-model="range" :min="0" :max="100" />
+                <RangeSlider @change="setFilterPrice($event)" :values="priceFilterValues" :min="0" :max="1000" />
               </div>
 
-              <!-- <div class="range-values mt-4">
-                <span>Prix minimum: {{ minThumbValue }}€</span>
-                <span>Prix maximum: {{ maxThumbValue }}€</span>
-              </div> -->
+              <div class="range-values mt-4 flex justify-between">
+                <span>Prix minimum: {{ priceFilterValues[0] }}€</span>
+                <span>Prix maximum: {{ priceFilterValues[1] }}€</span>
+              </div>
             </div>
           </div>
 
           <div>
             <h6 class="text-[22px] font-semibold">Capacité</h6>
+
+            <div class="relative mt-2">
+              <div class="range-container">
+                <RangeSlider @change="setFilterCapacity($event)" :values="capacityFilterValues" :min="0" :max="20" />
+              </div>
+
+              <div class="range-values mt-4 flex justify-between">
+                <span>Capacité minimum: {{ capacityFilterValues[0] }} personnes</span>
+                <span>Capacité maximum: {{ capacityFilterValues[1] }} personnes</span>
+              </div>
+            </div>
           </div>
 
-          <Button class="mx-auto" bgColor="black">Appliquer les filtres</Button>
+          <Button @click.native="applyFilters()" class="mx-auto" bgColor="black">Appliquer les filtres</Button>
         </div>
       </div>
     </Modal>
@@ -142,8 +165,9 @@ export default Vue.extend({
       isAtLimitLeft: true,
       isAtLimitRight: false,
       isAtTop: true,
-      isDisplayedModal: true,
-      range: [0, 100]
+      isDisplayedModal: false,
+      priceFilterValues: [0, 1000],
+      capacityFilterValues: [0, 20]
     }
   },
   computed: {
@@ -152,6 +176,9 @@ export default Vue.extend({
     },
     sliderTopBorderClasses() {
       return this.isAtTop ? '' : 'border-b border-gray-300'
+    },
+    isForcedViewportWidth() {
+      return this.$store.state.checkedPopups.includes('warnForBreakpoint')
     }
   },
   methods: {
@@ -165,6 +192,7 @@ export default Vue.extend({
       this.$emit('selectedIcon', this.selectedIcon)
     },
     slideTo(direction) {
+      const baseWidth = this.isForcedViewportWidth ? 1440 - 120 : window.innerWidth
       this.isAtLimitLeft = false
       this.isAtLimitRight = false
       if (direction === 'left') {
@@ -176,11 +204,25 @@ export default Vue.extend({
         this.translateValue = 0
         this.isAtLimitLeft = true
       }
-      if (this.translateValue <= -this.$refs.slider.offsetWidth + window.innerWidth) {
-        this.translateValue = -this.$refs.slider.offsetWidth + window.innerWidth
+      if (this.translateValue <= -this.$refs.slider.offsetWidth + baseWidth) {
+        this.translateValue = -this.$refs.slider.offsetWidth + baseWidth
         this.isAtLimitRight = true
       }
       this.$refs.slider.style.transform = `translateX(${this.translateValue}px)`
+    },
+    setFilterPrice(values) {
+      this.priceFilterValues = values
+    },
+    setFilterCapacity(values) {
+      this.capacityFilterValues = values
+    },
+    applyFilters() {
+      this.$emit('applyFilters', {
+        price: this.priceFilterValues,
+        capacity: this.capacityFilterValues
+      })
+
+      this.isDisplayedModal = false
     }
   },
   mounted() {

@@ -92,7 +92,7 @@
 
           <ul class="w-80 px-2">
             <li class="pb-4"><strong>Accueil de voyageurs</strong></li>
-            <li class="pb-4">Mettez votre logement sur Airbnb</li>
+            <li class="pb-4">Mettez votre location sur Airbnb</li>
             <li class="pb-4">AirCover pour les hôtes</li>
             <li class="pb-4">Ressources pour les hôtes</li>
             <li class="pb-4">Forum de la communauté</li>

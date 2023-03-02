@@ -49,7 +49,7 @@
         <SearchButton id="search" @click.native="searchLocations()" class="cursor-pointer" ref="searchBtn" />
       </SearchBar>
 
-      <button class="pl-8 pr-4 h-4 font-semibold mb-1" @click="$userGoTo('/create-location')">Mettre mon logement sur Airbnb</button>
+      <button class="pl-8 pr-4 h-4 font-semibold mb-1" @click="$userGoTo('/create-location')">Mettre ma location sur Airbnb</button>
 
       <LanguageSelector class="p-2" />
 
@@ -112,7 +112,7 @@ export default {
       isDisplayedModal: false,
       isSearchActive: false,
       selectedModalTab: 'signin',
-      searchQuery: '',
+      searchQuery: this.$route.params.search || '',
       searchTimer: null
     }
   },
@@ -124,7 +124,7 @@ export default {
     },
     searchLocations() {
       this.isSearchActive = true
-      this.$userGoTo(`/${this.searchQuery}`)
+      this.$router.push(`/${this.searchQuery}`)
     }
   },
   computed: {
@@ -145,7 +145,7 @@ export default {
     })
 
     document.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter') {
+      if (event.key === 'Enter' && this.isSearchActive) {
         this.searchLocations()
       } else {
         if (this.searchTimer) {

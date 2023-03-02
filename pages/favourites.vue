@@ -3,15 +3,25 @@
     <PageTitle>Mes Favoris</PageTitle>
 
     <LocationsGrid class="mt-6" :locations="favouriteLocations" />
+
+    <p v-if="favouriteLocations.length == 0">Vous n'avez pas encore ajouté de location à vos favoris !</p>
   </div>
 </template>
 
 <script>
 export default {
   name: 'Favourites',
-  async asyncData({ app }) {
-    const favouriteLocations = await app.$airbnbApi.getFavouriteLocations()
-    return { favouriteLocations }
+  data() {
+    return {
+      favouriteLocations: []
+    }
+  },
+  methods: {
+    getFavouriteLocations() {
+      this.$airbnbApi.getFavouriteLocations().then((favouriteLocations) => {
+        this.favouriteLocations = favouriteLocations
+      })
+    }
   },
   computed: {
     user() {
@@ -19,7 +29,7 @@ export default {
     }
   },
   mounted() {
-    this.$airbnbApi.getFavouriteLocations()
+    this.getFavouriteLocations()
   }
 }
 </script>

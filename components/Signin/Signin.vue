@@ -16,8 +16,8 @@ export default {
   data() {
     return {
       user: {
-        email: 'aubin2@gmail.com',
-        password: '!Aubin!77'
+        email: '',
+        password: ''
       },
       error: false
     }

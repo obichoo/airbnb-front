@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Categories @selectedIcon="categoryFilter = $event" />
+    <Categories @applyFilters="applyFilters($event)" @selectedIcon="categoryFilter = $event" />
 
     <div class="px-20 pt-32 mb-10">
       <LocationsGrid :locations="filteredLocations" />
@@ -21,22 +21,42 @@ export default Vue.extend({
   data() {
     return {
       categoryFilter: '',
-      searchQuery: this.$route.params.search || ''
+      searchQuery: this.$route.params.search || '',
+      priceFilterValues: [0, 1000],
+      capacityFilterValues: [0, 20]
     }
   },
-  async asyncData({ app }) {
+  async asyncData({ app, route }) {
     const locations = await app.$airbnbApi.getLocations()
     const newLocations = locations
-    return { locations: newLocations }
+    return {
+      locations: newLocations.filter((location) => {
+        const locationTerms = Object.values(location).join(' ').toLowerCase()
+        return locationTerms.includes(route.params.search.toLowerCase())
+      })
+    }
+  },
+  methods: {
+    applyFilters({ price, capacity }) {
+      this.priceFilterValues = price
+      this.capacityFilterValues = capacity
+    }
   },
   computed: {
     filteredLocations() {
-      this.locations = this.locations.filter((location) => {
-        const locationTerms = Object.values(location).join(' ').toLowerCase()
-        return locationTerms.includes(this.searchQuery.toLowerCase())
-      })
-      if (this.categoryFilter) return this.locations.filter((location) => location.category === this.categoryFilter)
-      return this.locations
+      if (this.locations) {
+        let newLocations = [...this.locations]
+        if (this.categoryFilter) newLocations = newLocations.filter((location) => location.category === this.categoryFilter)
+
+        return newLocations.filter((location) => {
+          return (
+            location.price >= this.priceFilterValues[0] &&
+            location.price <= this.priceFilterValues[1] &&
+            location.caracteristics.travellers >= this.capacityFilterValues[0] &&
+            location.caracteristics.travellers <= this.capacityFilterValues[1]
+          )
+        })
+      }
     },
     user() {
       return this.$store.state.user || {}

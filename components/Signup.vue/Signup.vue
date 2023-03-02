@@ -19,10 +19,10 @@ export default {
   data() {
     return {
       user: {
-        firstName: 'Aubin2',
-        lastName: 'Olivrie2',
-        email: 'aubin3@gmail.com',
-        password: '!Aubin!77'
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: ''
       },
       error: false,
       emailAlreadyRegistered: false

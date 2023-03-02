@@ -31,10 +31,19 @@
         <button
           @click="
             toggleMenu(false)
-            $userGoTo('/profile')
+            $userGoTo('/account')
           "
         >
-          Mon profil
+          Mon compte
+        </button>
+        <button
+          v-if="user.role === 'OWNER'"
+          @click="
+            toggleMenu(false)
+            $userGoTo('/my-locations')
+          "
+        >
+          Mes locations
         </button>
         <button
           @click="
@@ -43,6 +52,16 @@
           "
         >
           Mes favoris
+        </button>
+        <button
+          v-if="user.isAdmin"
+          @click="
+            toggleMenu(false)
+            $userGoTo('/admin')
+          "
+          class="text-red-500"
+        >
+          Panel admin
         </button>
         <button
           @click="
@@ -69,7 +88,7 @@
             $userGoTo('/create-location')
           "
         >
-          Mettre mon logement sur Airbnb
+          Mettre ma location sur Airbnb
         </button>
         <button>Aide</button>
       </div>
@@ -110,7 +129,7 @@ export default {
 
     window.addEventListener('click', (e) => {
       e.stopPropagation()
-      
+
       if (e.target.closest('#menu_btn') && !this.isMenuDisplayed) {
         this.toggleMenu(false)
       } else if (e.target.closest('#menu') || e.target.closest('#menu_btn')) {

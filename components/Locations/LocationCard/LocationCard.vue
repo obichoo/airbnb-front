@@ -2,7 +2,7 @@
   <div class="w-[302px]">
     <div>
       <div class="relative rounded-xl h-[286px] overflow-hidden">
-        <button v-on:click="toggleFavourite()" id="favourite" type="button" class="absolute z-20 top-3 right-4">
+        <button @click="toggleFavourite()" id="favourite" type="button" class="absolute z-20 top-3 right-4">
           <svg
             viewBox="0 0 32 32"
             class="pointer-events-none"
@@ -22,7 +22,7 @@
           <button
             id="swipe_left"
             class="bg-white border-gray-300 border-2 rounded-full p-2 transition-all duration-300 shadow-none shadow-black hover:shadow-md"
-            v-on:click="slideTo('left')"
+            @click="slideTo('left')"
           >
             <svg viewBox="0 0 32 32" class="block fill-none h-3 w-3 stroke-current overflow-visible pointer-events-none" style="stroke-width: 5.33333">
               <g fill="none">
@@ -44,7 +44,7 @@
           <button
             id="swipe_right"
             class="bg-white border-gray-300 border-2 rounded-full p-2 transition-all duration-300 shadow-none shadow-black hover:shadow-md"
-            v-on:click="slideTo('right')"
+            @click="slideTo('right')"
           >
             <svg viewBox="0 0 32 32" class="pointer-events-none block fill-none h-3 w-3 stroke-current overflow-visible" style="stroke-width: 5.33333">
               <g fill="none">

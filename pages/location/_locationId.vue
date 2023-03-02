@@ -144,7 +144,7 @@
 
             <div>
               <h4 class="text-base font-semibold">Idéalement situé</h4>
-              <small class="text-sm text-[#717171]">100&nbsp;% des voyageurs ont attribué 5&nbsp;étoiles à l'emplacement du logement.</small>
+              <small class="text-sm text-[#717171]">100&nbsp;% des voyageurs ont attribué 5&nbsp;étoiles à l'emplacement de la location.</small>
             </div>
           </div>
 
@@ -240,19 +240,19 @@
           <div class="border border-[#B0B0B0] py-[10px] px-3 rounded-b-lg">
             <label class="uppercase text-[10px] font-extrabold block" for="voyageurs">Voyageurs</label>
             <p>
-              <input @change="getJourneyPrice()" class="w-8 outline-none" type="number" value="2" name="voyageurs" />
+              <input @change="getJourneyPrice()" class="w-8 outline-none" type="number" v-model="travellers" name="voyageurs" />
               voyageurs
             </p>
           </div>
         </div>
 
-        <button class="mt-4 bg-[#E61E4D] text-white w-full outline-none border-none rounded-lg py-[14px]" disabled>Réserver</button>
+        <button class="mt-4 bg-[#E61E4D] text-white w-full outline-none border-none rounded-lg py-[14px]" @click="bookLocation()">Réserver</button>
 
         <p class="text-sm text-center mt-4">Aucun montant ne vous sera débité pour le moment</p>
 
         <div class="flex justify-between mt-6">
           <p class="underline">{{ location.price }} x {{ nbNights }} nuits</p>
-          <p>{{ totalPrice }} €</p>
+          <p>{{ totalNightsPrice }} €</p>
         </div>
 
         <div class="flex justify-between pt-4">
@@ -264,7 +264,7 @@
 
         <div class="flex justify-between font-semibold">
           <p>Total</p>
-          <p>{{ totalPrice + location.serviceCharge }} €</p>
+          <p>{{ totalNightsPrice + location.serviceCharge }} €</p>
         </div>
       </div>
     </div>
@@ -280,7 +280,8 @@ export default {
       locationId: null,
       location: null,
       author: null,
-      totalPrice: null,
+      totalNightsPrice: null,
+      travellers: 2,
       nbNights: null,
       dateArrivee: new Date(new Date().setDate(new Date().getDate() + 5)).toISOString().split('T')[0],
       dateDepart: new Date(new Date().setDate(new Date().getDate() + 10)).toISOString().split('T')[0]
@@ -309,6 +310,7 @@ export default {
       this.$axios.get('locations/' + this.locationId).then((res) => {
         this.location = res.data
 
+        this.getJourneyPrice()
         this.getAuthor()
       })
     },
@@ -330,7 +332,7 @@ export default {
       const daysDiff = new Date(this.dateDepart).getTime() - new Date(this.dateArrivee).getTime()
       this.nbNights = daysDiff / 1000 / 60 / 60 / 24
 
-      this.totalPrice = this.nbNights * this.location.price
+      this.totalNightsPrice = this.nbNights * this.location.price * this.travellers
     },
     toggleFavourite() {
       if (this.$forceConnected()) {
@@ -340,12 +342,25 @@ export default {
           this.$airbnbApi.addFavourite(this.location._id)
         }
       }
+    },
+    bookLocation() {
+      if (this.$forceConnected()) {
+        const body = {
+          locationId: this.location._id,
+          arriveDate: this.dateArrivee,
+          leaveDate: this.dateDepart,
+          travellers: this.travellers,
+          price: this.totalNightsPrice + this.location.serviceCharge
+        }
+
+        this.$airbnbApi.bookLocation(body).then((res) => {
+          this.$router.push('/account/bookings')
+        })
+      }
     }
   },
   mounted() {
     this.getLocation()
-
-    window.addEventListener('load', () => this.getJourneyPrice())
   }
 }
 </script>
