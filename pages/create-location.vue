@@ -32,7 +32,7 @@ export default {
         { id: 'Professionnels', name: 'Professionnels' }
       ],
       categories: categories || [],
-      imgsField: 'https://loremflickr.com/cache/resized/65535_52626058135_28d0289a84_h_1280_720_nofilter.jpg,https://loremflickr.com/cache/resized/65535_52691101566_d5f69b5af1_h_1280_720_nofilter.jpg , https://loremflickr.com/cache/resized/65535_52295363701_471b2c0717_h_1280_720_nofilter.jpg, https://loremflickr.com/cache/resized/65535_52214085447_ec2bf04bd7_h_1280_720_nofilter.jpg',
+      imgsField: '',
     //   location: {
     //     imgs: [],
     //     title: '',
@@ -51,18 +51,18 @@ export default {
     //   },
       location: {
         imgs: [],
-        title: 'Les chardons bleus',
-        target: 'Professionnels',
-        description: 'Petite maison tranquille avec jardin et piscine et vue sur la mer et le port de plaisance. A 5 minutes à pied du centre ville et de la plage. A 10 minutes en voiture de la gare et de l aéroport. Son emplacement est idéal pour découvrir la région.',
-        price: 10,
-        category: 'wow',
-        location: 'Pontault-combault',
-        serviceCharge: 1,
+        title: '',
+        target: '',
+        description: '',
+        price: null,
+        category: '',
+        location: '',
+        serviceCharge: null,
         caracteristics: {
-          travellers: 10,
-          rooms: 1,
-          beds: 1,
-          bathrooms: 10
+          travellers: null,
+          rooms: null,
+          beds: null,
+          bathrooms: null
         }
       }
     }
@@ -72,6 +72,9 @@ export default {
       this.location.imgs = this.imgsField.split(',').map((img) => img.trim())
 
       this.$airbnbApi.createLocation(this.location).then((response) => {
+        if (response.status !== 200) {
+          return
+        }
         this.$userGoTo('/my-locations')
       })
     },
